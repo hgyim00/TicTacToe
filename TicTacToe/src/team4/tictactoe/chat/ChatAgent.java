@@ -5,18 +5,23 @@ import team4.tictactoe.server.GameRoom;
 
 /**
  * 
- * @author 
+ * @author
  * @since 2020.11
  *
  */
 public class ChatAgent {
 
+	/**
+	 * 게임방을 연결한다.
+	 */
+	public GameRoom gameRoom = null;
+
 	public ChatAgent(GameRoom newGameRoom) {
-		// TODO Auto-generated constructor stub
+		gameRoom = newGameRoom;
 	}
 
-	public void processMessage(ChatMessage removeFirst) {
+	public void processMessage(ChatMessage msg) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -141,6 +141,7 @@ public class TicTacToeClient extends JFrame {
 	 * @param msg
 	 */
 	public void onReceiveChatMessage(ChatMessage msg) {
+		
 	}
 
 	/**

@@ -77,7 +77,7 @@ public class LoginUser extends Thread {
 		ChatMessage chatMessage = new ChatMessage();
 
 		// 한 줄 메시지를 해석하여 틱택토 메시지인지 확인하는 객체
-		TicTacToeMessage ticTacTocMessage = new TicTacToeMessage();
+		TicTacToeMessage ticTacToeMessage = new TicTacToeMessage();
 
 		try {
 			// 소켓에서 입력 받는 기능을 담당하는 객체를 생성한다.
@@ -97,15 +97,15 @@ public class LoginUser extends Thread {
 
 				if (loginMessage.setMessageString(msgLine)) {
 					// 로그인 메시지이면 로그인한다.
-					doLogin(loginMessage);
+					processLoginMessage(loginMessage);
 				} else if (userId != null) {
 					// 로그인이 되어 있으면 게임이나 채팅을 한다.
 					if (chatMessage.setMessageString(msgLine)) {
-						// 채팅 메시지이면 채팅 큐엥 저장한다.
+						// 채팅 메시지이면 채팅 큐에 저장한다.
 						gameRoom.enqueueChatMessage(chatMessage);
-					} else if (ticTacTocMessage.setMessageString(msgLine)) {
+					} else if (ticTacToeMessage.setMessageString(msgLine)) {
 						// 틱택토 메시지이면 틱택토 메시지 큐에 저장한다.
-						gameRoom.enqueueTicTacToeMessage(ticTacTocMessage);
+						gameRoom.enqueueTicTacToeMessage(ticTacToeMessage);
 					}
 				}
 			} catch (IOException e) {
@@ -138,22 +138,49 @@ public class LoginUser extends Thread {
 	 * 
 	 * @param msg
 	 */
-	private void doLogin(LoginMessage msg) {
-		if (identifyUser(msg)) {
-			// 사용자에게 로그인 성공 메시지를 전송한다.
-			msg.userPassword = null;
-			sendMessage(msg);
-			
-			// 게임방에 입장한다.
-			GameRoom.enter(this);
+	private void processLoginMessage(LoginMessage msg) {
+		if (msg.userName != null) {
+			// 사용자 이름이 있으면 회원가입으로 처리한다.
+			if (doRegister(msg)) {
+				// 회원가입 성공 메시지를 전송한다.
+				// TODO
+			} else {
+				// 회원가입 실패 메시지를 전송한다.
+				// TODO
+			}
 		} else {
-			// 사용자에게 로그인 실패 메시지를 전송한다.
-			msg.reset();
-			sendMessage(msg);
+			if (doLogin(msg)) {
+				//
+				// 사용자에게 로그인 성공 메시지를 전송한다.
+				msg.userPassword = null;
+				sendMessage(msg);
+
+				// 게임방에 입장한다.
+				GameRoom.enter(this);
+			} else {
+				// 사용자에게 로그인 실패 메시지를 전송한다.
+				msg.reset();
+				sendMessage(msg);
+			}
 		}
 	}
 
-	private boolean identifyUser(LoginMessage msg) {
+	/**
+	 * 
+	 * @param msg
+	 * @return
+	 */
+	private boolean doRegister(LoginMessage msg) {
+		// TODO 회원가입
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param msg
+	 * @return
+	 */
+	private boolean doLogin(LoginMessage msg) {
 		// TODO: msg.userId, msg.userPassword 확인해서 일치하는지 확인한다.
 		// TODO: 사용자 정보를 msg에 저장한다.
 		msg.userName = "AAA"; // TODO 로그인을 성공하면 사용자명을 저장한다.

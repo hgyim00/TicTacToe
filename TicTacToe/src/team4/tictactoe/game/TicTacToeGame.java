@@ -6,18 +6,23 @@ import team4.tictactoe.server.GameRoom;
 /**
  * 
  * 
- * @author 임혜균
+ * @author 
  * @since 2020.11
  */
 public class TicTacToeGame {
 
+	/**
+	 * 게임방을 연결한다.
+	 */
+	public GameRoom gameRoom = null;
+
 	public TicTacToeGame(GameRoom newGameRoom) {
-		// TODO Auto-generated constructor stub
+		gameRoom = newGameRoom;
 	}
 
-	public void processMessage(TicTacToeMessage removeFirst) {
+	public void processMessage(TicTacToeMessage msg) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -16,5 +16,6 @@ public class ChatPanel extends Panel {
 	public void create(TicTacToeClient parent) {
 		ticTacTocClient = parent;
 
+		//TODO 기능 구현
 	}
 }

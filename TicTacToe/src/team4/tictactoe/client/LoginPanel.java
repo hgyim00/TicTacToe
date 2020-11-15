@@ -145,7 +145,7 @@ public class LoginPanel extends Panel {
 				LoginMessage loginMsg = new LoginMessage();
 				loginMsg.userId = idField.getText();
 				loginMsg.userPassword = new String(pwField.getPassword());
-				if (rdLogin.isSelected()) {
+				if (rdRegister.isSelected()) {
 					// 회원가입이면 사용자 이름을 함께 전송한다.
 					loginMsg.userName = nameField.getText();
 				} 
