@@ -150,6 +150,10 @@ public class GameRoom extends Thread {
 		} else if (loginUser==player2){
 			player2 = null;
 		}
+		
+		if (player1 == null && player2 == null) {
+			goOn = false;
+		}
 	}
 
 	/**
