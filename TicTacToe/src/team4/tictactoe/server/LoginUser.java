@@ -3,8 +3,12 @@ package team4.tictactoe.server;
 import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 import java.net.Socket;
 import team4.tictactoe.common.ChatMessage;
@@ -173,7 +177,7 @@ public class LoginUser extends Thread {
 	 * @return
 	 */
 	private boolean doRegister(LoginMessage msg) {
-		File file = new FILE("account.txt");
+		File file = new File("account.txt");
 		
 		try {
 			// TODO 회원가입
@@ -181,12 +185,14 @@ public class LoginUser extends Thread {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String s = null;
 			List<String> sList = null;
-			while (s = reader.readLine()!= null) {
+			while ((s = reader.readLine())!= null) {
 				sList = Arrays.asList(s.split(","));
 				if (sList.get(0).toString().equals(msg.userId)) {
+					reader.close();
 					return false;
 				}
 			}
+			reader.close();
 			/* write account information */
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 		    writer.append(msg.userId + "," + msg.userPassword + "," + msg.userName + "\n");
