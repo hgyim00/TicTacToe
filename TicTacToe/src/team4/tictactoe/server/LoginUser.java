@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.net.Socket;
 import team4.tictactoe.common.ChatMessage;
 import team4.tictactoe.common.LoginMessage;
@@ -171,7 +172,8 @@ public class LoginUser extends Thread {
 	 * @return
 	 */
 	private boolean doRegister(LoginMessage msg) {
-		// TODO 회원가입
+		File file = new FILE("account.txt");
+		
 		return false;
 	}
 
