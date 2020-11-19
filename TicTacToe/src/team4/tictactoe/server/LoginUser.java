@@ -1,5 +1,6 @@
 package team4.tictactoe.server;
 
+import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -174,6 +175,25 @@ public class LoginUser extends Thread {
 	private boolean doRegister(LoginMessage msg) {
 		File file = new FILE("account.txt");
 		
+		try {
+			// TODO 회원가입
+			/* read account information, 즁복 체크 */
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String s = null;
+			List<String> sList = null;
+			while (s = reader.readLine()!= null) {
+				sList = Arrays.asList(s.split(","));
+				if (sList.get(0).toString().equals(msg.userId)) {
+					return false;
+				}
+			}
+			/* write account information */
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		    writer.append(msg.userId + "," + msg.userPassword + "," + msg.userName + "\n");
+		    writer.close();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
 		return false;
 	}
 
