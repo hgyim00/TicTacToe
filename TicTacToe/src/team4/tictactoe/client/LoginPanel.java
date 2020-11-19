@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
@@ -25,9 +26,12 @@ public class LoginPanel extends Panel {
 	private static final long serialVersionUID = -9077614322650298497L;
 
 	TicTacToeClient ticTacTocClient = null;
-
+	
+	/* login, register 중 하나만 선택 */
+	ButtonGroup grp = new ButtonGroup();
 	JRadioButton rdLogin = null;
 	JRadioButton rdRegister = null;
+
 	JLabel idLabel = null;
 	JTextField idField = null;
 	JLabel pwLabel = null;
@@ -46,6 +50,9 @@ public class LoginPanel extends Panel {
 		// 화면 구성 항목 객체 생성
 		rdLogin = new JRadioButton();
 		rdRegister = new JRadioButton();
+		grp.add(rdLogin);
+		grp.add(rdRegister);
+		
 		idLabel = new JLabel("ID");
 		idField = new JTextField();
 		pwLabel = new JLabel("PW");
