@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
@@ -25,6 +26,9 @@ public class LoginPanel extends Panel {
 	private static final long serialVersionUID = -9077614322650298497L;
 
 	TicTacToeClient ticTacTocClient = null;
+
+	/* login, register 중 하나만 선택 */
+	ButtonGroup grp = new ButtonGroup();
 
 	JRadioButton rdLogin = null;
 	JRadioButton rdRegister = null;
@@ -46,6 +50,9 @@ public class LoginPanel extends Panel {
 		// 화면 구성 항목 객체 생성
 		rdLogin = new JRadioButton();
 		rdRegister = new JRadioButton();
+		grp.add(rdRegister);
+		grp.add(rdLogin);
+
 		idLabel = new JLabel("ID");
 		idField = new JTextField();
 		pwLabel = new JLabel("PW");
@@ -62,8 +69,8 @@ public class LoginPanel extends Panel {
 		btnExit.setText("Exit");
 
 		// 화면 구성 항목 배치
-		rdLogin.setBounds(10, 10, 60, 24);
-		rdRegister.setBounds(80, 10, 80, 24);
+		rdRegister.setBounds(10, 10, 80, 24);
+		rdLogin.setBounds(90, 10, 60, 24);
 		idLabel.setBounds(10, 40, 40, 24);
 		idField.setBounds(50, 40, 80, 24);
 		pwLabel.setBounds(10, 70, 40, 24);
@@ -92,8 +99,8 @@ public class LoginPanel extends Panel {
 		btnExit.setVisible(true);
 
 		// 화면 구성 항목 관리
-		this.add(rdLogin);
 		this.add(rdRegister);
+		this.add(rdLogin);
 		this.add(idLabel);
 		this.add(idField);
 		this.add(pwLabel);
@@ -148,7 +155,7 @@ public class LoginPanel extends Panel {
 				if (rdRegister.isSelected()) {
 					// 회원가입이면 사용자 이름을 함께 전송한다.
 					loginMsg.userName = nameField.getText();
-				} 
+				}
 
 				// 로그인/회원가입 요청
 				serverConnection.sendMessage(loginMsg);

@@ -18,6 +18,12 @@ public class LoginMessage implements Message {
 	private static final String ATTR_USER_ID = "userId=";
 	private static final String ATTR_USER_PASSWORD = "userPassword=";
 	private static final String ATTR_USER_NAME = "userName=";
+	private static final String ATTR_STATE = "state=";
+	
+	public static final int REGISTER_FAIL = 10;
+	public static final int REGISTER_SUCCESS = 11;
+	public static final int LOGIN_FAIL = 20;
+	public static final int LOGIN_SUCCESS = 21;
 
 	/**
 	 * 로그인 또는 회원가입할 사용자 ID
@@ -33,12 +39,19 @@ public class LoginMessage implements Message {
 	 * 회원가입할 사용자 이름 또는 로그인한 사용자 이름.
 	 */
 	public String userName;
+	
+	/**
+	 * 로그인, 회원가입 상태
+	 */
+	public int state;
+	
 
 	@Override
 	public void reset() {
 		userId = null;
 		userPassword = null;
 		userName = null;
+		state = 0;
 	}
 
 	@Override
@@ -55,6 +68,10 @@ public class LoginMessage implements Message {
 		if (userName!=null && !userName.isEmpty()) {
 			msgBuf.append(ATTR_USER_NAME + userName + ",");
 		}
+		if (state!=0) {
+			msgBuf.append(ATTR_STATE + state + ",");
+		}
+	
 
 		return msgBuf.toString();
 	}
@@ -80,6 +97,9 @@ public class LoginMessage implements Message {
 			}
 			if (msgItem.startsWith(ATTR_USER_NAME)) {
 				userName = msgItem.substring(ATTR_USER_NAME.length());
+			}
+			if (msgItem.startsWith(ATTR_STATE)) {
+				state = Integer.parseInt(msgItem.substring(ATTR_STATE.length()));
 			}
 		}
 

@@ -1,10 +1,18 @@
 package team4.tictactoe.server;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
+
 import team4.tictactoe.common.ChatMessage;
 import team4.tictactoe.common.LoginMessage;
 import team4.tictactoe.common.Message;
@@ -57,7 +65,8 @@ public class LoginUser extends Thread {
 	/**
 	 * 생성자
 	 * 
-	 * @param connectionSocket 사용자와 접속하고 있는 소켓
+	 * @param connectionSocket
+	 *            사용자와 접속하고 있는 소켓
 	 */
 	public LoginUser(Socket connectionSocket) {
 		this.connectionSocket = connectionSocket;
@@ -141,20 +150,19 @@ public class LoginUser extends Thread {
 	private void processLoginMessage(LoginMessage msg) {
 		if (msg.userName != null) {
 			// 사용자 이름이 있으면 회원가입으로 처리한다.
-			if (doRegister(msg)) {
-				// 회원가입 성공 메시지를 전송한다.
-				// TODO
-			} else {
-				// 회원가입 실패 메시지를 전송한다.
-				// TODO
-			}
+			doRegister(msg);
+			// 회원가입 결과 메시지를 전송한다.
+			msg.userId = null;
+			msg.userPassword = null;
+			msg.userName = null;
+			sendMessage(msg); // state 전송 (다시 로그인창으로 넘어감)
+
 		} else {
 			if (doLogin(msg)) {
-				//
 				// 사용자에게 로그인 성공 메시지를 전송한다.
 				msg.userPassword = null;
-				sendMessage(msg);
-
+				sendMessage(msg); // userId, userName 전송
+				
 				// 게임방에 입장한다.
 				GameRoom.enter(this);
 			} else {
@@ -171,8 +179,54 @@ public class LoginUser extends Thread {
 	 * @return
 	 */
 	private boolean doRegister(LoginMessage msg) {
-		// TODO 회원가입
-		return false;
+		/* 회원가입 시작 */
+		File file = new File("account.txt");
+		BufferedReader reader = null;
+		try {
+			/* read account information, 즁복 체크 */
+			try {
+				reader = new BufferedReader(new FileReader(file));
+
+			} catch (Exception e) {
+				try {
+					System.out.println("create new File.");
+					file.createNewFile();
+					reader = new BufferedReader(new FileReader(file));
+
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					msg.state = LoginMessage.REGISTER_FAIL;
+					return false;
+				}
+			}
+			/* 파일이 이미 있으면 추가로 작성 */
+			String s = null;
+			List<String> sList = null;
+			while ((s = reader.readLine()) != null) {
+				sList = Arrays.asList(s.split(","));
+				if (sList.get(0).toString().equals(msg.userId)) {
+					reader.close();
+					msg.state = LoginMessage.REGISTER_FAIL;
+					return false;
+				}
+			}
+			reader.close();
+		} catch (IOException e) {
+		}
+		try {
+			/* write account information */
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.append(msg.userId + "," + msg.userPassword + "," + msg.userName + "\n");
+			writer.close();
+			msg.state = LoginMessage.REGISTER_SUCCESS;
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			msg.state = LoginMessage.REGISTER_FAIL;
+			return false;
+		}
+		/* 회원가입 끝 */
+
 	}
 
 	/**
@@ -181,9 +235,38 @@ public class LoginUser extends Thread {
 	 * @return
 	 */
 	private boolean doLogin(LoginMessage msg) {
-		// TODO: msg.userId, msg.userPassword 확인해서 일치하는지 확인한다.
-		// TODO: 사용자 정보를 msg에 저장한다.
-		msg.userName = "AAA"; // TODO 로그인을 성공하면 사용자명을 저장한다.
-		return true;
+		// msg.userId, msg.userPassword 확인해서 일치하는지 확인한다.
+
+		File file = new File("account.txt");
+		try {
+			/* read account information, 즁복 체크 */
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String s = null;
+			String[] sList = null;
+			while ((s = reader.readLine()) != null) {
+				sList = s.split(",");
+				if (sList[0].equals(msg.userId)) {
+					reader.close();
+					if (sList[1].equals(msg.userPassword)) {
+						// 사용자 정보를 msg에 저장한다.
+						// 로그인을 성공하면 사용자명을 저장한다.
+						msg.userName = sList[2];
+						msg.state = LoginMessage.LOGIN_SUCCESS;
+						return true;
+					} else {
+						msg.state = LoginMessage.LOGIN_FAIL;
+						return false;
+					}
+				}
+			}
+			reader.close();
+			System.out.println("User Id is not exsist.");
+			msg.state = LoginMessage.LOGIN_FAIL;
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			msg.state = LoginMessage.LOGIN_FAIL;
+			return false;
+		}
 	}
 }
