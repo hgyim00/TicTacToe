@@ -1,6 +1,7 @@
 package team4.tictactoe.client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.Socket;
@@ -723,7 +724,59 @@ public class TicTacToeClient extends JFrame {
     * @param msg
     */
    public void onReceiveTicTacToeMessage(TicTacToeMessage msg) {
-      
+	   // state 처리하고 색칠해주면 마지막 칸은 반영이 안됨
+	  /* color by marker */
+	  Color red = new java.awt.Color(255, 55, 55);
+ 	  Color green = new java.awt.Color(55, 255, 55);
+ 	  Color color = null;
+ 	  
+ 	  if (msg.playerMark == "O" && msg.turn == "O")
+ 	  {
+ 		  color = red;
+ 	  }
+ 	  else if (msg.playerMark == "O" && msg.turn == "X")
+ 	  {
+ 		  color = green;
+ 	  }
+ 	  else if (msg.playerMark == "X" && msg.turn == "O")
+ 	  {
+ 		  color = green;
+ 	  }
+ 	  else if (msg.playerMark == "X" && msg.turn == "X")
+ 	  {
+ 		  color = red;
+ 	  }
+ 	  
+ 	  /* Color right space */
+ 	  if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 0) {
+ 		  jButton3.setBackground(color);
+ 	  }
+ 	  if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 1) {
+ 		  jButton3.setBackground(color);
+ 	  }
+ 	  if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 2) {
+ 		  jButton3.setBackground(color);
+ 	  }
+ 	  
+ 	  if (Integer.parseInt(msg.row) == 1 && Integer.parseInt(msg.column) == 0) {
+ 		  jButton3.setBackground(color);
+ 	  }
+ 	  if (Integer.parseInt(msg.row) == 1 && Integer.parseInt(msg.column) == 1) {
+ 		  jButton3.setBackground(color);
+ 	  }
+ 	  if (Integer.parseInt(msg.row) == 1 && Integer.parseInt(msg.column) == 2) {
+ 		  jButton3.setBackground(color);
+ 	  }
+ 	  
+ 	  if (Integer.parseInt(msg.row) == 2 && Integer.parseInt(msg.column) == 0) {
+ 		  jButton3.setBackground(color);
+ 	  }
+ 	  if (Integer.parseInt(msg.row) == 2 && Integer.parseInt(msg.column) == 1) {
+ 		  jButton3.setBackground(color);
+ 	  }
+ 	  if (Integer.parseInt(msg.row) == 2 && Integer.parseInt(msg.column) == 2) {
+ 		  jButton3.setBackground(color);
+ 	  }
       //승패 결과를 알려주면서 게임을 계속할 것인지 물어보는 화면으로 전환한다.
       if(msg.gameState == "tie") { 
          
@@ -746,11 +799,11 @@ public class TicTacToeClient extends JFrame {
           */
          
       }else {
-         
+    	  
          /**
           * NetBeans를 이용한 GUI?
           */
-         
+  
       }//승패가 나지 않았을 경우에는 보드판에 상대방의 수를 표시하며 게임을 진행한다.
    }
    
