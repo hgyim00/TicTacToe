@@ -19,7 +19,7 @@ import team4.tictactoe.common.TicTacToeMessage;
 /**
  * 서버에 접속된 사용자에 대한 쓰레드.
  * 
- * @author 임혜균
+ * @author 임혜균, 김민경
  * @since 2020.11
  */
 public class LoginUser extends Thread {
@@ -177,12 +177,36 @@ public class LoginUser extends Thread {
 	 * @return
 	 */
 	private boolean doRegister(LoginMessage msg) {
+<<<<<<< Updated upstream
+=======
+		/* Start register.(Make account file if file not exist) 회원가입 시작 */
+>>>>>>> Stashed changes
 		File file = new File("account.txt");
 		
 		try {
+<<<<<<< Updated upstream
 			// TODO 회원가입
 			/* read account information, 즁복 체크 */
 			BufferedReader reader = new BufferedReader(new FileReader(file));
+=======
+			/* Read account information.*/
+			try {
+				reader = new BufferedReader(new FileReader(file));
+
+			} catch (Exception e) {
+				try {
+					System.out.println("create new File.");
+					file.createNewFile();
+					reader = new BufferedReader(new FileReader(file));
+
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					msg.state = LoginMessage.REGISTER_FAIL;
+					return false;
+				}
+			}
+			/* Duplicate check. 중복 체크   */
+>>>>>>> Stashed changes
 			String s = null;
 			List<String> sList = null;
 			while ((s = reader.readLine())!= null) {
@@ -193,14 +217,31 @@ public class LoginUser extends Thread {
 				}
 			}
 			reader.close();
+<<<<<<< Updated upstream
 			/* write account information */
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 		    writer.append(msg.userId + "," + msg.userPassword + "," + msg.userName + "\n");
 		    writer.close();
+=======
+		} catch (IOException e) {
+		}
+		try {
+			/* Append user account to account.txt. 파일이 이미 있으면 추가로 작성 */
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true)); // append apply
+			writer.append(msg.userId + "," + msg.userPassword + "," + msg.userName + "\n");
+			writer.close();
+			msg.state = LoginMessage.REGISTER_SUCCESS;
+			return true;
+>>>>>>> Stashed changes
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
+<<<<<<< Updated upstream
 		return false;
+=======
+		/* End of register. 회원가입 끝 */
+
+>>>>>>> Stashed changes
 	}
 
 	/**
