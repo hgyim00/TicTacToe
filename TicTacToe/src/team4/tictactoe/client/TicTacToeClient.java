@@ -726,25 +726,18 @@ public class TicTacToeClient extends JFrame {
    public void onReceiveTicTacToeMessage(TicTacToeMessage msg) {
 	   // state 처리하고 색칠해주면 마지막 칸은 반영이 안됨
 	  /* color by marker */
+	   System.out.println("msg");
 	  Color red = new java.awt.Color(255, 55, 55);
  	  Color green = new java.awt.Color(55, 255, 55);
  	  Color color = null;
  	  
- 	  if (msg.playerMark == "O" && msg.turn == "O")
+ 	  if (msg.playerMark == "O")
  	  {
  		  color = red;
  	  }
- 	  else if (msg.playerMark == "O" && msg.turn == "X")
+ 	  else if (msg.playerMark == "X")
  	  {
  		  color = green;
- 	  }
- 	  else if (msg.playerMark == "X" && msg.turn == "O")
- 	  {
- 		  color = green;
- 	  }
- 	  else if (msg.playerMark == "X" && msg.turn == "X")
- 	  {
- 		  color = red;
  	  }
  	  
  	  /* Color right space */

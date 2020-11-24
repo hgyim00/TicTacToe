@@ -80,6 +80,11 @@ public class GameRoom extends Thread {
 
 			// 사용자에게 방을 배정한다.
 			loginUser.gameRoom = newGameRoom;
+			
+			// 사용자에게 o,x를 알린다
+		       TicTacToeMessage gameStartMsg = new TicTacToeMessage();
+		       gameStartMsg.playerMark = "O";
+		       gameStartMsg.turn = "O";
 
 			// 게임을 대기시킨다.
 			newGameRoom.start();
@@ -89,6 +94,11 @@ public class GameRoom extends Thread {
 
 			// 사용자에게 방을 배정한다.
 			loginUser.gameRoom = newGameRoom;
+			
+			// 사용자에게 o,x를 알린다
+		       TicTacToeMessage gameStartMsg = new TicTacToeMessage();
+		       gameStartMsg.playerMark = "X";
+		       gameStartMsg.turn = "O";
 
 			// 방에 입장이 완료되었으므로 다음에 사용자가 입장하면 방을 새로 개설하도록 한다.
 			newGameRoom = null;
