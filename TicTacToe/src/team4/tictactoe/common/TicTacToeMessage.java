@@ -16,12 +16,17 @@ public class TicTacToeMessage implements Message {
    private static final String ATTR_USER_ROW = "row=";
    private static final String ATTR_USER_COLUMN = "column=";
    private static final String ATTR_USER_TURN = "turn=";
+   private static final String ATTR_USER_PLAYER = "player=";
+   private static final String ATTR_USER_OPPONENT = "opponent=";
    public static final String GAME_STATE_WAITING = "gameState=";
    /**
     * O 또는 X.
     */
    public String playerMark;
 
+   public String player;
+   
+   public String opponent;
    /**
     * 보드판에 표시해야 할 행.
     */
@@ -49,6 +54,8 @@ public class TicTacToeMessage implements Message {
       column = null;
       turn = null;
       gameState = null;
+      player = null;
+      opponent = null;
    }
    
    @Override
@@ -68,10 +75,15 @@ public class TicTacToeMessage implements Message {
       if (turn!=null && !turn.isEmpty()) {
          msgBuf.append(ATTR_USER_TURN + turn + ",");
       }
-      if (turn!=null && !turn.isEmpty()) {
+      if (gameState!=null && !gameState.isEmpty()) {
          msgBuf.append(GAME_STATE_WAITING + gameState + ",");
       }
-      
+      if(player!=null && !player.isEmpty()) {
+         msgBuf.append(ATTR_USER_PLAYER + player + ",");
+      }
+      if(opponent!=null && !opponent.isEmpty()) {
+         msgBuf.append(ATTR_USER_OPPONENT + opponent + ",");
+      }
       return msgBuf.toString();
    }
 
@@ -101,7 +113,13 @@ public class TicTacToeMessage implements Message {
             turn = msgItem.substring(ATTR_USER_TURN.length());
          }
          if (msgItem.startsWith(GAME_STATE_WAITING)) {
-            turn = msgItem.substring(GAME_STATE_WAITING.length());
+            gameState = msgItem.substring(GAME_STATE_WAITING.length());
+         } 
+         if (msgItem.startsWith(ATTR_USER_PLAYER)) {
+             player = msgItem.substring(ATTR_USER_PLAYER.length());
+         }
+         if (msgItem.startsWith(ATTR_USER_OPPONENT)) {
+             opponent = msgItem.substring(ATTR_USER_OPPONENT.length());
          }
       }
 

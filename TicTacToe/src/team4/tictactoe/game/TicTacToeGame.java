@@ -18,6 +18,7 @@ public class TicTacToeGame {
 
    public TicTacToeGame(GameRoom newGameRoom) {
       gameRoom = newGameRoom;
+
    }
 
    
@@ -35,6 +36,7 @@ public class TicTacToeGame {
 
    public static void setBoard(int i, int j, char playerMark) {
        board[i][j] = playerMark;
+       
    }
    
    public char getBoard(int i, int j) {
@@ -87,11 +89,15 @@ public class TicTacToeGame {
       
       char mark = msg.playerMark.charAt(0);
       TicTacToeGame.setBoard(Integer.parseInt(msg.row), Integer.parseInt(msg.column), mark);
+      System.out.println(msg.row+msg.column);
       //사용자들의 정보를 보드판에 입력한다.
-      
-       // 게임 결과 보내기
-       TicTacToeMessage newMsg = new TicTacToeMessage();
-       newMsg.gameState = TicTacToeMessage.GAME_STATE_WAITING;
+   // 게임 결과 보내기
+      TicTacToeMessage newMsg = new TicTacToeMessage();
+      newMsg.gameState = TicTacToeMessage.GAME_STATE_WAITING;
+   
+      newMsg.row=msg.row;
+      newMsg.column=msg.row;
+      System.out.println(msg.getMessageString());
        
       if (checkWin()==true) {
 

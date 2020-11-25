@@ -26,13 +26,15 @@ public class TicTacToeClient extends JFrame {
    public String hostName = null;
    public int port = 0;
 
-   
-   
+   public String playerMarker=null;
+   public String opponent =null;
+   public String player = null;
+   public String turn = null; 
    /**
     * 로그인 상태이면 사용자 이름을 저장한다. 로그인하지 않은 상태이면 null을 저장한다.
     */
    public String userName = null;
-
+   
    private javax.swing.JButton jButton1;
    private javax.swing.JButton jButton10;
    private javax.swing.JButton jButton11;
@@ -117,6 +119,10 @@ public class TicTacToeClient extends JFrame {
    public TicTacToeClient(String hostName, int port) {
       this.hostName = hostName;
       this.port = port;
+   }
+   public void setGame(String marker,String opponent_) {
+      playerMarker=marker;
+      opponent=opponent_;
    }
    private void initComponents() {
 
@@ -334,10 +340,8 @@ public class TicTacToeClient extends JFrame {
        jButton11.setIcon(new javax.swing.ImageIcon("empty.png")); // NOI18N
 
        jLabel4.setFont(new java.awt.Font("Lato Semibold", 0, 18)); // NOI18N
-       jLabel4.setText("PLAYER1");
 
        jLabel5.setFont(new java.awt.Font("Lato Semibold", 0, 18)); // NOI18N
-       jLabel5.setText("PLAYER2");
 
        ticTacToePanel.setVisible(true);
 
@@ -438,7 +442,7 @@ public class TicTacToeClient extends JFrame {
          jButton8.addActionListener(new ActionSix());
          jButton9.addActionListener(new ActionSeven());
          jButton10.addActionListener(new ActionEight());
-         jButton11.addActionListener(new ActionNine());
+         jButton11.addActionListener(new ActionNine(this));
          
          
          
@@ -529,11 +533,11 @@ public class TicTacToeClient extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                TicTacToeMessage ticTacToeMsg = new TicTacToeMessage();
+               ticTacToeMsg.playerMark=playerMarker;
                ticTacToeMsg.row=Integer.toString(0);
                ticTacToeMsg.column=Integer.toString(0);
-               jButton3.setBackground(new java.awt.Color(255, 55, 55));
-
-            }
+               serverConnection.sendMessage(ticTacToeMsg);
+               }
          }
        private class ActionTwo extends AbstractAction {
           @Override
@@ -541,7 +545,7 @@ public class TicTacToeClient extends JFrame {
              TicTacToeMessage ticTacToeMsg = new TicTacToeMessage();
                ticTacToeMsg.row=Integer.toString(0);
                ticTacToeMsg.column=Integer.toString(1);
-               jButton4.setBackground(new java.awt.Color(55, 255, 55));
+
           }
          }
        private class ActionThree extends AbstractAction {
@@ -593,6 +597,13 @@ public class TicTacToeClient extends JFrame {
           }
          }
        private class ActionNine extends AbstractAction {
+          
+            TicTacToeClient tictac =null;
+
+          public ActionNine(TicTacToeClient ticTacToe) {
+             tictac=ticTacToe;
+          }
+          
           @Override
             public void actionPerformed(ActionEvent e) {
              TicTacToeMessage ticTacToeMsg = new TicTacToeMessage();
@@ -724,82 +735,106 @@ public class TicTacToeClient extends JFrame {
     * @param msg
     */
    public void onReceiveTicTacToeMessage(TicTacToeMessage msg) {
-	   // state 처리하고 색칠해주면 마지막 칸은 반영이 안됨
-	  /* color by marker */
-	   System.out.println("msg");
-	  Color red = new java.awt.Color(255, 55, 55);
- 	  Color green = new java.awt.Color(55, 255, 55);
- 	  Color color = null;
- 	  
- 	  if (msg.playerMark == "O")
- 	  {
- 		  color = red;
- 	  }
- 	  else if (msg.playerMark == "X")
- 	  {
- 		  color = green;
- 	  }
- 	  
- 	  /* Color right space */
- 	  if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 0) {
- 		  jButton3.setBackground(color);
- 	  }
- 	  if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 1) {
- 		  jButton3.setBackground(color);
- 	  }
- 	  if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 2) {
- 		  jButton3.setBackground(color);
- 	  }
- 	  
- 	  if (Integer.parseInt(msg.row) == 1 && Integer.parseInt(msg.column) == 0) {
- 		  jButton3.setBackground(color);
- 	  }
- 	  if (Integer.parseInt(msg.row) == 1 && Integer.parseInt(msg.column) == 1) {
- 		  jButton3.setBackground(color);
- 	  }
- 	  if (Integer.parseInt(msg.row) == 1 && Integer.parseInt(msg.column) == 2) {
- 		  jButton3.setBackground(color);
- 	  }
- 	  
- 	  if (Integer.parseInt(msg.row) == 2 && Integer.parseInt(msg.column) == 0) {
- 		  jButton3.setBackground(color);
- 	  }
- 	  if (Integer.parseInt(msg.row) == 2 && Integer.parseInt(msg.column) == 1) {
- 		  jButton3.setBackground(color);
- 	  }
- 	  if (Integer.parseInt(msg.row) == 2 && Integer.parseInt(msg.column) == 2) {
- 		  jButton3.setBackground(color);
- 	  }
-      //승패 결과를 알려주면서 게임을 계속할 것인지 물어보는 화면으로 전환한다.
-      if(msg.gameState == "tie") { 
+         // state 처리하고 색칠해주면 마지막 칸은 반영이 안됨
+        /* color by marker */
+	   	System.out.println(msg.getMessageString());
+         Color color = null;
+         Color red = new java.awt.Color(255, 55, 55);
+         Color green = new java.awt.Color(55, 255, 55);
+         if(playerMarker==null) {
+            playerMarker=msg.playerMark;
+            System.out.println(playerMarker);
+         }
+         if(player==null) {
+            player=msg.player;
+            jLabel4.setText(player);
+            System.out.println(player);
+
+         }
+         if(opponent==null) {
+            opponent = msg.opponent;
+            jLabel5.setText(opponent);
+            System.out.println(opponent);
+
+         }
          
-         /**
-          * NetBeans를 이용한 GUI?
-          */
+         if (msg.playerMark == "O" && msg.turn == "O")
+         {
+            color = red;
+         }
+         else if (msg.playerMark == "O" && msg.turn == "X")
+         {
+            color = green;
+         }
+         else if (msg.playerMark == "X" && msg.turn == "O")
+         {
+            color = green;
+         }
+         else if (msg.playerMark == "X" && msg.turn == "X")
+         {
+            color = red;
+         }
+         if(msg.row!=null&&msg.column!=null) {
+         /* Color right space */
+            if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 0) {
+               jButton3.setBackground(color);
+            }
+            if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 1) {
+               jButton4.setBackground(color);
+            }
+            if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 2) {
+               jButton5.setBackground(color);
+            }
          
-      }//비겼습니다. 다시 하시겠습니까?
-      else if(msg.gameState == "winO") {
+            if (Integer.parseInt(msg.row) == 1 && Integer.parseInt(msg.column) == 0) {
+               jButton6.setBackground(color);
+            }
+            if (Integer.parseInt(msg.row) == 1 && Integer.parseInt(msg.column) == 1) {
+               jButton7.setBackground(color);
+            }
+            if (Integer.parseInt(msg.row) == 1 && Integer.parseInt(msg.column) == 2) {
+               jButton8.setBackground(color);
+            }
          
-         /**
-          * NetBeans를 이용한 GUI?
-          */
-         
-      }//player O가 이겼습니다. 다시 하시겠습니까?
-      else if(msg.gameState == "winX") {
-         
-         /**
-          * NetBeans를 이용한 GUI?
-          */
-         
-      }else {
-    	  
-         /**
-          * NetBeans를 이용한 GUI?
-          */
-  
-      }//승패가 나지 않았을 경우에는 보드판에 상대방의 수를 표시하며 게임을 진행한다.
-   }
-   
+            if (Integer.parseInt(msg.row) == 2 && Integer.parseInt(msg.column) == 0) {
+               jButton9.setBackground(color);
+            }
+            if (Integer.parseInt(msg.row) == 2 && Integer.parseInt(msg.column) == 1) {
+               jButton10.setBackground(color);
+            }
+            if (Integer.parseInt(msg.row) == 2 && Integer.parseInt(msg.column) == 2) {
+               jButton11.setBackground(color);
+            }
+         }
+         //승패 결과를 알려주면서 게임을 계속할 것인지 물어보는 화면으로 전환한다.
+         if(msg.gameState == "tie") { 
+            
+            /**
+             * NetBeans를 이용한 GUI?
+             */
+            
+         }//비겼습니다. 다시 하시겠습니까?
+         else if(msg.gameState == "winO") {
+            
+            /**
+             * NetBeans를 이용한 GUI?
+             */
+            
+         }//player O가 이겼습니다. 다시 하시겠습니까?
+         else if(msg.gameState == "winX") {
+            
+            /**
+             * NetBeans를 이용한 GUI?
+             */
+            
+         }else {
+            
+            /**
+             * NetBeans를 이용한 GUI?
+             */
+     
+         }//승패가 나지 않았을 경우에는 보드판에 상대방의 수를 표시하며 게임을 진행한다.
+      }
    public void onCloseConnection() {
       userName = null;
       openLogin();
