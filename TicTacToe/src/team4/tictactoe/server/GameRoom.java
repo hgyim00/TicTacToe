@@ -1,6 +1,8 @@
 package team4.tictactoe.server;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import team4.tictactoe.chat.ChatAgent;
 import team4.tictactoe.common.ChatMessage;
@@ -32,12 +34,12 @@ public class GameRoom extends Thread {
 	/**
 	 * 채팅 메시지 큐
 	 */
-	private LinkedList<ChatMessage> chatMessageQ = new LinkedList<ChatMessage>();
+	private List<ChatMessage> chatMessageQ = (List<ChatMessage>) Collections.synchronizedList(new LinkedList<ChatMessage>());
 
 	/**
 	 * 틱택토 게임 메시지 큐
 	 */
-	private LinkedList<TicTacToeMessage> ticTacToeMessageQ = new LinkedList<TicTacToeMessage>();
+	private List<TicTacToeMessage> ticTacToeMessageQ = (List<TicTacToeMessage>) Collections.synchronizedList(new LinkedList<TicTacToeMessage>());
 
 	/**
 	 * 택택토 게임 기능을 담당하는 객체
@@ -59,10 +61,10 @@ public class GameRoom extends Thread {
 	 */
 	public GameRoom() {
 		// 틱택토 게임 진행 객체를 생성한다.
-		ticTacToeGame = new TicTacToeGame(newGameRoom);
+		ticTacToeGame = new TicTacToeGame(this);
 
 		// 채팅 대행 객체를 생성한다.
-		chatAgent = new ChatAgent(newGameRoom);
+		chatAgent = new ChatAgent(this);
 	}
 
 	/**
@@ -100,8 +102,9 @@ public class GameRoom extends Thread {
 	 * 
 	 * @param msg
 	 */
-	public synchronized void enqueueChatMessage(ChatMessage msg) {
+	public void enqueueChatMessage(ChatMessage msg) {
 		chatMessageQ.add(msg);
+		System.out.println("enqueue chat: " + chatMessageQ.get(chatMessageQ.size()-1).chatText);
 	}
 
 	/**
@@ -109,11 +112,13 @@ public class GameRoom extends Thread {
 	 * 
 	 * @return
 	 */
-	public synchronized ChatMessage dequeueChatMessage() {
+	public ChatMessage dequeueChatMessage() {
 		if (chatMessageQ.isEmpty()) {
 			return null;
 		} else {
-			return chatMessageQ.removeFirst();
+			ChatMessage rm = chatMessageQ.remove(0);
+			System.out.println("dequeue chat: " + rm.chatText);
+			return rm;
 		}
 	}
 
@@ -122,7 +127,7 @@ public class GameRoom extends Thread {
 	 * 
 	 * @param msg
 	 */
-	public synchronized void enqueueTicTacToeMessage(TicTacToeMessage msg) {
+	public void enqueueTicTacToeMessage(TicTacToeMessage msg) {
 		ticTacToeMessageQ.add(msg);
 	}
 
@@ -131,11 +136,11 @@ public class GameRoom extends Thread {
 	 * 
 	 * @return
 	 */
-	public synchronized TicTacToeMessage dequeueTicTacToeMessage() {
+	public TicTacToeMessage dequeueTicTacToeMessage() {
 		if (ticTacToeMessageQ.isEmpty()) {
 			return null;
 		} else {
-			return ticTacToeMessageQ.removeFirst();
+			return ticTacToeMessageQ.remove(0);
 		}
 	}
 	
@@ -163,6 +168,7 @@ public class GameRoom extends Thread {
 		while (goOn) {
 			// 채팅 메시지를 먼저 처리한다.
 			while (!chatMessageQ.isEmpty()) {
+				System.out.println("chat message 처리");
 				chatAgent.processMessage(dequeueChatMessage());
 			}
 		

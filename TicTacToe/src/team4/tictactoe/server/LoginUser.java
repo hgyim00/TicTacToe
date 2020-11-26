@@ -103,6 +103,7 @@ public class LoginUser extends Thread {
 			try {
 				// 접속한 사용자로부터 메시지를 받는다.
 				msgLine = this.inStream.readLine();
+				System.out.println("server receive: " + msgLine);
 
 				if (loginMessage.setMessageString(msgLine)) {
 					// 로그인 메시지이면 로그인한다.
@@ -111,6 +112,8 @@ public class LoginUser extends Thread {
 					// 로그인이 되어 있으면 게임이나 채팅을 한다.
 					if (chatMessage.setMessageString(msgLine)) {
 						// 채팅 메시지이면 채팅 큐에 저장한다.
+						System.out.println("chat message에 들어옴");
+						chatMessage.userName = userName;
 						gameRoom.enqueueChatMessage(chatMessage);
 					} else if (ticTacToeMessage.setMessageString(msgLine)) {
 						// 틱택토 메시지이면 틱택토 메시지 큐에 저장한다.
@@ -137,7 +140,8 @@ public class LoginUser extends Thread {
 	public void sendMessage(Message msg) {
 		try {
 			String msgStr = msg.getMessageString();
-			this.outStream.writeBytes(msgStr + '\n');
+			System.out.println("server send: " + msgStr);
+			this.outStream.writeBytes(msgStr + "\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -164,7 +168,7 @@ public class LoginUser extends Thread {
 				userName = msg.userName;
 				msg.userPassword = null;
 				sendMessage(msg); // userId, userName 전송
-				
+
 				// 게임방에 입장한다.
 				GameRoom.enter(this);
 			} else {
@@ -186,21 +190,8 @@ public class LoginUser extends Thread {
 		BufferedReader reader = null;
 		try {
 			/* read account information, 즁복 체크 */
-			try {
-				reader = new BufferedReader(new FileReader(file));
+			reader = new BufferedReader(new FileReader(file));
 
-			} catch (Exception e) {
-				try {
-					System.out.println("create new File.");
-					file.createNewFile();
-					reader = new BufferedReader(new FileReader(file));
-
-				} catch (IOException e1) {
-					e1.printStackTrace();
-					msg.state = LoginMessage.REGISTER_FAIL;
-					return false;
-				}
-			}
 			/* 파일이 이미 있으면 추가로 작성 */
 			String s = null;
 			List<String> sList = null;
@@ -217,7 +208,8 @@ public class LoginUser extends Thread {
 		}
 		try {
 			/* write account information */
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true)); // append apply
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true)); // append
+																					// apply
 			writer.append(msg.userId + "," + msg.userPassword + "," + msg.userName + "\n");
 			writer.close();
 			msg.state = LoginMessage.REGISTER_SUCCESS;

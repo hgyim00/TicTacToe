@@ -59,7 +59,7 @@ public class ChatPanel extends Panel {
 
 	public void processMessage(ChatMessage msg) {
 		// 화면에 표시
-		gotMessage.append(msg.userName + ": " + msg.chatText);
+		gotMessage.append(msg.userName + ": " + msg.chatText + "\n");
 	}
 
 	private class ActionSendText extends AbstractAction {
@@ -72,7 +72,7 @@ public class ChatPanel extends Panel {
 			chatMsg.chatText = sendText.getText();
 
 			// 화면에 표시
-			gotMessage.append(ticTacTocClient.userName + ": " + chatMsg.chatText);
+			gotMessage.append(ticTacTocClient.userName + ": " + chatMsg.chatText + "\n");
 			
 			// 채팅 서버에 전송
 			ticTacTocClient.serverConnection.sendMessage(chatMsg);
