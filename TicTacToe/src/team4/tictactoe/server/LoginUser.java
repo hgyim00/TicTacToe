@@ -217,7 +217,7 @@ public class LoginUser extends Thread {
 		}
 		try {
 			/* write account information */
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true)); // append apply
 			writer.append(msg.userId + "," + msg.userPassword + "," + msg.userName + "\n");
 			writer.close();
 			msg.state = LoginMessage.REGISTER_SUCCESS;
