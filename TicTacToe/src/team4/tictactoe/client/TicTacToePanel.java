@@ -2,6 +2,8 @@ package team4.tictactoe.client;
 
 import java.awt.Panel;
 
+import team4.tictactoe.common.TicTacToeMessage;
+
 /**
  * 
  * @author 
@@ -15,5 +17,10 @@ public class TicTacToePanel extends Panel {
 	public void create(TicTacToeClient parent) {
 		ticTacTocClient = parent;
 
+	}
+
+	public void processMessage(TicTacToeMessage msg) {
+		// TODO Auto-generated method stub
+		
 	}
 }

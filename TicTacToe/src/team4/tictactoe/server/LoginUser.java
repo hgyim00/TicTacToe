@@ -160,6 +160,8 @@ public class LoginUser extends Thread {
 		} else {
 			if (doLogin(msg)) {
 				// 사용자에게 로그인 성공 메시지를 전송한다.
+				userId = msg.userId;
+				userName = msg.userName;
 				msg.userPassword = null;
 				sendMessage(msg); // userId, userName 전송
 				

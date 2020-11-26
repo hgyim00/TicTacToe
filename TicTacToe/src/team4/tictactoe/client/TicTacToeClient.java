@@ -20,8 +20,9 @@ public class TicTacToeClient extends JFrame {
 	public int port = 0;
 
 	/**
-	 * 로그인 상태이면 사용자 이름을 저장한다. 로그인하지 않은 상태이면 null을 저장한다.
+	 * 로그인 상태이면 사용자 ID와 이름을 저장한다. 로그인하지 않은 상태이면 null을 저장한다.
 	 */
+	public String userId = null;
 	public String userName = null;
 
 	private LoginPanel loginPanel = null;
@@ -64,7 +65,9 @@ public class TicTacToeClient extends JFrame {
 	 * 
 	 */
 	public void create() {
-		setLayout(new BorderLayout());
+		//setLayout(new BorderLayout());
+		// 화면 배치를 고정 값으로 하기 위해 매니저 해제
+		setLayout(null);
 
 		// 화면 중앙에 윈도우 배치
 		java.awt.Rectangle bound = getGraphicsConfiguration().getBounds();
@@ -77,16 +80,19 @@ public class TicTacToeClient extends JFrame {
 		// 로그인 패널 준비
 		loginPanel = new LoginPanel();
 		loginPanel.create(this);
+		loginPanel.setBounds(100, 100, 200, 200);
 		loginPanel.setVisible(false);
 
 		// 틱텍토 게임 패털 준비
 		ticTacToePanel = new TicTacToePanel();
 		ticTacToePanel.create(this);
+		ticTacToePanel.setBounds(100, 100, 200, 200);
 		ticTacToePanel.setVisible(false);
 
 		// 채팅 패털 준비
 		chatPanel = new ChatPanel();
 		chatPanel.create(this);
+		chatPanel.setBounds(10, 300, 200, 200);
 		chatPanel.setVisible(false);
 
 //		// 서버에 접속
@@ -126,10 +132,12 @@ public class TicTacToeClient extends JFrame {
 	public void onReceiveLoginMessage(LoginMessage msg) {
 		if (msg.userName != null) {
 			// 로그인을 성공하면 게임 화면으로 전환한다.
+			userId = msg.userId;
 			userName = msg.userName;
 			openGame();
 		} else {
 			// 로그인 실패
+			userId = null;
 			userName = null;
 			openLogin();
 		}
@@ -141,7 +149,7 @@ public class TicTacToeClient extends JFrame {
 	 * @param msg
 	 */
 	public void onReceiveChatMessage(ChatMessage msg) {
-		
+		chatPanel.processMessage(msg);
 	}
 
 	/**
@@ -150,6 +158,7 @@ public class TicTacToeClient extends JFrame {
 	 * @param msg
 	 */
 	public void onReceiveTicTacToeMessage(TicTacToeMessage msg) {
+		ticTacToePanel.processMessage(msg);
 	}
 
 	/**

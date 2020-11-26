@@ -21,7 +21,11 @@ public class ChatAgent {
 	}
 
 	public void processMessage(ChatMessage msg) {
-		// TODO Auto-generated method stub
-
+		if (gameRoom.player1 != null && msg.userId.equals(gameRoom.player1.userId)) {
+			gameRoom.player2.sendMessage(msg);
+		}
+		if (gameRoom.player2 != null && msg.userId.equals(gameRoom.player2.userId)) {
+			gameRoom.player1.sendMessage(msg);
+		}
 	}
 }

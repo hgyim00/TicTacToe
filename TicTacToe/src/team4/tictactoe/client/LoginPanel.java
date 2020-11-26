@@ -110,7 +110,8 @@ public class LoginPanel extends Panel {
 		this.add(btnEnter);
 		this.add(btnExit);
 
-		parent.setContentPane(this);
+		//parent.setContentPane(this);
+		parent.add(this);
 	}
 
 	private class ActionSelectLogin extends AbstractAction {
