@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>TicTacToe</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>O.png</name>
+			<type>1</type>
+			<location>C:/Users/신민철/Desktop/O.png</location>
+		</link>
+		<link>
+			<name>X.png</name>
+			<type>1</type>
+			<location>C:/Users/신민철/Desktop/X.png</location>
+		</link>
+		<link>
+			<name>empty.png</name>
+			<type>1</type>
+			<location>C:/Users/신민철/Desktop/empty.png</location>
+		</link>
+		<link>
+			<name>src/team4/tictactoe/O.png</name>
+			<type>1</type>
+			<location>C:/Users/신민철/Desktop/O.png</location>
+		</link>
+	</linkedResources>
+</projectDescription>

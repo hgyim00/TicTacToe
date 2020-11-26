@@ -102,7 +102,7 @@ public class LoginUser extends Thread {
          e.printStackTrace();
          goOn = false;
       }
-      
+
       while (goOn) {
          try {
             // 접속한 사용자로부터 메시지를 받는다.
@@ -111,7 +111,7 @@ public class LoginUser extends Thread {
             if (loginMessage.setMessageString(msgLine)) {
                // 로그인 메시지이면 로그인한다.
                processLoginMessage(loginMessage);
-            } else if (userId != null) {
+            } else /*if (userId != null)*/ {
                // 로그인이 되어 있으면 게임이나 채팅을 한다.
                if (chatMessage.setMessageString(msgLine)) {
                   // 채팅 메시지이면 채팅 큐에 저장한다.

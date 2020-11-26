@@ -97,7 +97,7 @@ public class TicTacToeGame {
    
       newMsg.row=msg.row;
       newMsg.column=msg.row;
-      System.out.println(msg.getMessageString());
+      System.out.println("ProcessMessage" + msg.getMessageString());
        
       if (checkWin()==true) {
 

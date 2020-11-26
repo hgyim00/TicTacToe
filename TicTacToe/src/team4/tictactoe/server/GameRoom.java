@@ -137,6 +137,7 @@ public class GameRoom extends Thread {
     * @param msg
     */
    public synchronized void enqueueTicTacToeMessage(TicTacToeMessage msg) {
+	   // System.out.println("enqueue");
       ticTacToeMessageQ.add(msg);
    }
 
@@ -146,6 +147,7 @@ public class GameRoom extends Thread {
     * @return
     */
    public synchronized TicTacToeMessage dequeueTicTacToeMessage() {
+	   System.out.println("dequeue");
       if (ticTacToeMessageQ.isEmpty()) {
          return null;
       } else {
@@ -176,12 +178,14 @@ public class GameRoom extends Thread {
    public void run() {
       while (goOn) {
          // 채팅 메시지를 먼저 처리한다.
-         while (!chatMessageQ.isEmpty()) {
-            chatAgent.processMessage(dequeueChatMessage());
-         }
+         //while (!chatMessageQ.isEmpty()) {
+         //   chatAgent.processMessage(dequeueChatMessage());
+         //}
       
          // 틱텍토 게임 메시지를 처리한다.
+    	  // System.out.print("do while");
          while (!ticTacToeMessageQ.isEmpty()) {
+        	 System.out.print("!empty");
             ticTacToeGame.processMessage(dequeueTicTacToeMessage());
          }
       }
