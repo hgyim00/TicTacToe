@@ -2,7 +2,7 @@ package team4.tictactoe.common;
 
 /**
  * 
- * @author 
+ * @author 안건하
  * @since 2020.11
  *
  */

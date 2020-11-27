@@ -6,7 +6,7 @@ package team4.tictactoe.common;
  * 클라이언트가 자신의 클릭한 버튼의 행과 열, X 또는 O 표시를 서버에 전송한다.
  * 서버는 현재 게임판을 보고 승패 여부를 판단하여 클라이언트에게 전송한다.
  * 
- * @author 
+ * @author 신민철, 이소정
  * @since 2020.11
  */
 public class TicTacToeMessage implements Message {

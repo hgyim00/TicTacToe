@@ -19,7 +19,7 @@ import team4.tictactoe.common.LoginMessage;
 
 /**
  * 
- * @author 임혜균
+ * @author 신민철
  * @since 2020.11
  *
  */
@@ -28,20 +28,11 @@ public class LoginPanel {
 
 	TicTacToeClient ticTacToeClient= null;
 	
-	private javax.swing.JPanel login;	
-	public LoginPanel(JPanel loginPanel) {
-		login = loginPanel;
-	}
-	
 	public void create(TicTacToeClient parent) {
 		ticTacToeClient = parent;
 
 	}
 
-	private void setBackground(int i, int j, int k) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
 

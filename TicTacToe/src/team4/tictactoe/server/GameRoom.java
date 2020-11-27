@@ -163,17 +163,7 @@ public class GameRoom extends Thread {
 	 * 틱텍토 게임 메시지 큐에서 메시지를 한 개 빼온다.
 	 * 
 	 * @return
-	 */
-	//public synchronized TicTacToeMessage dequeueTicTacToeMessage() {
-	//
-	//	TicTacToeMessage temp= new TicTacToeMessage();
-	//	
-	//	temp=ticTacToeMessageQ.get(count);
-	//	
-	//	count++;
-		
-	//	return temp;
-	//}
+	 *
 	
 	/**
 	 * 사용자 접속이 끊긴 경우 실행된다. 다른 사용자에게 접속이 끊긴 것을 알리고 게임을 종료한다.

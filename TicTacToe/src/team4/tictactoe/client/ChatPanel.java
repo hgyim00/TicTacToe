@@ -8,7 +8,7 @@ import javax.swing.JTextArea;
 
 /**
  * 
- * @author 
+ * @author 안건하
  * @since 2020.11
  *
  */

@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 
 /**
  * 
- * @author 
+ * @author 신민철, 이소정
  * @since 2020.11
  */
 public class TicTacToePanel extends Panel {

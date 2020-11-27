@@ -7,7 +7,7 @@ import team4.tictactoe.server.LoginUser;
 /**
  * 
  * 
- * @author 
+ * @author 이소정
  * @since 2020.11
  */
 public class TicTacToeGame {

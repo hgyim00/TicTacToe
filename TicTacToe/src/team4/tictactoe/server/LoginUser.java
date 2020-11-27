@@ -21,7 +21,7 @@ import team4.tictactoe.common.TicTacToeMessage;
 /**
  * 서버에 접속된 사용자에 대한 쓰레드.
  * 
- * @author 임혜균
+ * @author 임혜균, 김민경
  * @since 2020.11
  */
 public class LoginUser extends Thread {
