@@ -71,7 +71,8 @@ public class GameRoom extends Thread {
 	public GameRoom() {
 		// 틱택토 게임 진행 객체를 생성한다.
 		// 채팅 대행 객체를 생성한다.
-		
+		ticTacToeGame = new TicTacToeGame(this);
+
 		
 		chatAgent = new ChatAgent(this);
 	}
@@ -112,7 +113,6 @@ public class GameRoom extends Thread {
 			play2.opponent = newGameRoom.player2.userName;
 			newGameRoom.player2.sendMessage(play2);
 			
-			ticTacToeGame = new TicTacToeGame(newGameRoom);
 			
 			
 			// 사용자에게 방을 배정한다.
