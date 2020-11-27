@@ -38,7 +38,7 @@ public class TicTacToeGame {
    }
 
    
-   static int[][] board = new int[3][3];
+    int[][] board = new int[3][3];
    //2차원 문자 배열을 이용하여서 보드를 나타낸다.
    
    public  int count =0;
@@ -46,7 +46,7 @@ public class TicTacToeGame {
    
    
    
-   public static void setBoard(int i, int j, String playerMark) {
+   public void setBoard(int i, int j, String playerMark) {
       if(playerMark.equals("X")) {
     	  board[i][j] = 100;
       }
@@ -111,23 +111,45 @@ public class TicTacToeGame {
 	   String mark_=msg.playerMark;
 	   String turn_ = msg.turn;
 	   
-      TicTacToeGame.setBoard(Integer.parseInt(row_), Integer.parseInt(column_), mark_);
-      count++;
-      System.out.println("Hello");
-      System.out.println(row_);
-      System.out.println(column_);
-      System.out.println(mark_);
-      System.out.println(turn_);
+	   int check=0;
+	   
+		TicTacToeMessage newMsg = new TicTacToeMessage();
+	      	newMsg.gameState = TicTacToeMessage.GAME_STATE_WAITING;
+	      	newMsg.playerMark=mark_;
+	      	newMsg.row=row_;
+	      	newMsg.column=column_;
+	   if(getBoard(Integer.parseInt(row_),Integer.parseInt(column_))==100||getBoard(Integer.parseInt(row_),Integer.parseInt(column_))==200) {
+	    	  newMsg.row="-1";
+	    	  newMsg.column="-1";
+	    	  check=1;
+	    	  newMsg.turn=msg.turn;
+	    	 	 
+	    	  newMsg.gameState="ALREADY";
+	    	  
+	    	  gameRoom.player1.sendMessage(newMsg); // Player 1에게 메시지 전송
+	          gameRoom.player2.sendMessage(newMsg); // Player 2에게 메시지 전송
+	   }
+	   else {
+		      //TicTacToeGame.setBoard(Integer.parseInt(row_), Integer.parseInt(column_), mark_);
+		  if(mark_.equals("X")) {
+		 	board[Integer.parseInt(row_)][Integer.parseInt(column_)]=100;
+		  }
+		  else {
+		   	board[Integer.parseInt(row_)][Integer.parseInt(column_)]=200;
+		  }
+		   
+	   
 
       //사용자들의 정보를 보드판에 입력한다.
    // 게임 결과 보내기
-      TicTacToeMessage newMsg = new TicTacToeMessage();
-      newMsg.gameState = TicTacToeMessage.GAME_STATE_WAITING;
-      newMsg.playerMark=mark_;
-      newMsg.row=row_;
-      newMsg.column=column_;
+	count++;
+
+ 	if(check==1) {
+    	  
+    	  check=0;
       
-      if (checkWin()==true) {
+     }
+     else if (checkWin()==true) {
 
          if(turn_.equals("X")) { // X플레이어가 이긴 상황
             
@@ -210,6 +232,7 @@ public class TicTacToeGame {
          else {
             newMsg.turn = "X";
          }
+	  newMsg.gameState="KEEP";
           gameRoom.player1.sendMessage(newMsg); // Player 1에게 메시지 전송
           gameRoom.player2.sendMessage(newMsg); // Player 2에게 메시지 전송
       }
