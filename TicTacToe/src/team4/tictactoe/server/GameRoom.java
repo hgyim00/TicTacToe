@@ -105,12 +105,14 @@ public class GameRoom extends Thread {
 			play1.playerMark="X";
 			play1.player=newGameRoom.player1.userName;
 			play1.opponent = newGameRoom.player2.userName;
+			play1.gameState="init";
 			newGameRoom.player1.sendMessage(play1);
 			
 			TicTacToeMessage play2 = new TicTacToeMessage();
 			play2.playerMark="O";
 			play2.player=newGameRoom.player1.userName;
 			play2.opponent = newGameRoom.player2.userName;
+			play2.gameState="init";
 			newGameRoom.player2.sendMessage(play2);
 			
 			
