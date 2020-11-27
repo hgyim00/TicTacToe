@@ -79,10 +79,10 @@ public class TicTacToeMessage implements Message {
          msgBuf.append(GAME_STATE_WAITING + gameState + ",");
       }
       if(player!=null && !player.isEmpty()) {
-         msgBuf.append(ATTR_USER_PLAYER + player + ",");
+    	  msgBuf.append(ATTR_USER_PLAYER + player + ",");
       }
       if(opponent!=null && !opponent.isEmpty()) {
-         msgBuf.append(ATTR_USER_OPPONENT + opponent + ",");
+    	  msgBuf.append(ATTR_USER_OPPONENT + opponent + ",");
       }
       return msgBuf.toString();
    }
@@ -93,6 +93,7 @@ public class TicTacToeMessage implements Message {
          return false;
       }
 
+      
       reset();
       
       String msgItems[] = msg.substring(MSG_NAME.length()).split(",");
@@ -126,3 +127,4 @@ public class TicTacToeMessage implements Message {
       return true;
    }
 }
+

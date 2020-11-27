@@ -15,13 +15,23 @@ public class ChatAgent {
 	 * 게임방을 연결한다.
 	 */
 	public GameRoom gameRoom = null;
-
+	
 	public ChatAgent(GameRoom newGameRoom) {
 		gameRoom = newGameRoom;
 	}
-
+	
 	public void processMessage(ChatMessage msg) {
 		// TODO Auto-generated method stub
 
+		if (gameRoom.player1 != null && msg.userId.equals(gameRoom.player1.userId)) {
+			if(gameRoom.player2!=null) {
+				gameRoom.player2.sendMessage(msg);
+			}
+		}
+		if (gameRoom.player2 != null && msg.userId.equals(gameRoom.player2.userId)) {
+			if(gameRoom.player1!=null) {
+				gameRoom.player1.sendMessage(msg);
+			}
+		}
 	}
 }
