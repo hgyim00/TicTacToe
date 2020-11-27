@@ -863,6 +863,10 @@ public class TicTacToeClient extends JFrame {
 		Color color = null;
 		Color red = new java.awt.Color(255, 55, 55);
 		Color green = new java.awt.Color(55, 255, 55);
+		String state=null;
+	     	if(msg.gameState!=null) {
+	    	 	 state = msg.gameState;
+	      	}
 		if (playerMarker == null) {
 			playerMarker = msg.playerMark;
 			turn = "X";
@@ -892,7 +896,13 @@ public class TicTacToeClient extends JFrame {
 			turn = msg.turn;
 			System.out.println("TURN" + turn);
 		}
-		if (msg.row != null && msg.column != null) {
+			    
+	     	if(state.equals("ALREADY")){
+	    	 	if(turn.equals(playerMarker)) {
+    		  		JOptionPane.showMessageDialog(ticTacToePanel, "Already selected");
+	    	  	}
+	      	}
+		else if (msg.row != null && msg.column != null) {
 			/* 색을 칠할 공간 생성 */
 			if (Integer.parseInt(msg.row) == 0 && Integer.parseInt(msg.column) == 0) {
 				jButton3.setBackground(color);
@@ -953,7 +963,7 @@ public class TicTacToeClient extends JFrame {
 				if (playerMarker.equals("O")) {
 					System.out.println("YOU Win");
 
-					int result = JOptionPane.showConfirmDialog(ticTacToePanel, "YOU WIN | KEEP PLAYING?");
+	    		  		int result = JOptionPane.showConfirmDialog(ticTacToePanel, "YOU WIN | KEEP PLAYING?","CONFIRM",JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.CLOSED_OPTION) {
 						System.exit(0);
 					} else if (result == JOptionPane.YES_OPTION) {
@@ -972,7 +982,7 @@ public class TicTacToeClient extends JFrame {
 				} else if (playerMarker.equals("X")) {
 					System.out.println("YOU Lose");
 
-					int result = JOptionPane.showConfirmDialog(ticTacToePanel, "YOU LOSE | KEEP PLAYING?");
+	    		 		int result=JOptionPane.showConfirmDialog(ticTacToePanel, "YOU LOSE | KEEP PLAYING?","CONFIRM",JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.CLOSED_OPTION) {
 						System.exit(0);
 					} else if (result == JOptionPane.YES_OPTION) {
@@ -996,7 +1006,7 @@ public class TicTacToeClient extends JFrame {
 				if (playerMarker.equals("X")) {
 					System.out.println("YOU Win");
 
-					int result = JOptionPane.showConfirmDialog(ticTacToePanel, "YOU WIN | KEEP PLAYING?");
+		    		  	int result = JOptionPane.showConfirmDialog(ticTacToePanel, "YOU WIN | KEEP PLAYING?","CONFIRM",JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.CLOSED_OPTION) {
 						System.exit(0);
 					} else if (result == JOptionPane.YES_OPTION) {
@@ -1016,7 +1026,7 @@ public class TicTacToeClient extends JFrame {
 				} else if (playerMarker.equals("O")) {
 					System.out.println("YOU Lose");
 
-					int result = JOptionPane.showConfirmDialog(ticTacToePanel, "YOU LOSE | KEEP PLAYING?");
+		    		  	int result = JOptionPane.showConfirmDialog(ticTacToePanel, "YOU LOSE | KEEP PLAYING?","CONFIRM",JOptionPane.YES_NO_OPTION);
 					if (result == JOptionPane.CLOSED_OPTION) {
 						System.exit(0);
 					} else if (result == JOptionPane.YES_OPTION) {
