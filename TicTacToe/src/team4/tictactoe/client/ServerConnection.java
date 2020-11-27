@@ -57,6 +57,7 @@ public class ServerConnection extends Thread {
 					} else if (ticTacTocMessage.setMessageString(msgLine)) {
 						ticTacToeClient.onReceiveTicTacToeMessage(ticTacTocMessage);
 					}
+					
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

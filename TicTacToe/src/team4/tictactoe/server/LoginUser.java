@@ -41,12 +41,17 @@ public class LoginUser extends Thread {
 	 * 접속한 사용자 이름을 저장한다.
 	 */
 	public String userName = null;
+	
+	public String turn = null;
 
 	/**
 	 * 사용자가 입장한 게임방을 연결한다.
 	 */
 	public GameRoom gameRoom = null;
+	
 
+	
+	public String playerMarker=null;
 	/**
 	 * 사용자와 접속하고 있는 소켓
 	 */
@@ -98,25 +103,25 @@ public class LoginUser extends Thread {
 			e.printStackTrace();
 			goOn = false;
 		}
-
+		
 		while (goOn) {
 			try {
 				// 접속한 사용자로부터 메시지를 받는다.
 				msgLine = this.inStream.readLine();
-				System.out.println("server receive: " + msgLine);
+				System.out.println(msgLine);
 
 				if (loginMessage.setMessageString(msgLine)) {
 					// 로그인 메시지이면 로그인한다.
 					processLoginMessage(loginMessage);
-				} else if (userId != null) {
+				} else {
 					// 로그인이 되어 있으면 게임이나 채팅을 한다.
 					if (chatMessage.setMessageString(msgLine)) {
 						// 채팅 메시지이면 채팅 큐에 저장한다.
-						System.out.println("chat message에 들어옴");
-						chatMessage.userName = userName;
+						chatMessage.userName =userName;
 						gameRoom.enqueueChatMessage(chatMessage);
 					} else if (ticTacToeMessage.setMessageString(msgLine)) {
 						// 틱택토 메시지이면 틱택토 메시지 큐에 저장한다.
+						
 						gameRoom.enqueueTicTacToeMessage(ticTacToeMessage);
 					}
 				}
@@ -140,7 +145,6 @@ public class LoginUser extends Thread {
 	public void sendMessage(Message msg) {
 		try {
 			String msgStr = msg.getMessageString();
-			System.out.println("server send: " + msgStr);
 			this.outStream.writeBytes(msgStr + "\n");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -164,11 +168,11 @@ public class LoginUser extends Thread {
 		} else {
 			if (doLogin(msg)) {
 				// 사용자에게 로그인 성공 메시지를 전송한다.
-				userId = msg.userId;
-				userName = msg.userName;
+				userId=msg.userId;
+				userName=msg.userName;
 				msg.userPassword = null;
 				sendMessage(msg); // userId, userName 전송
-
+				
 				// 게임방에 입장한다.
 				GameRoom.enter(this);
 			} else {
@@ -208,8 +212,7 @@ public class LoginUser extends Thread {
 		}
 		try {
 			/* write account information */
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true)); // append
-																					// apply
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true)); // append 
 			writer.append(msg.userId + "," + msg.userPassword + "," + msg.userName + "\n");
 			writer.close();
 			msg.state = LoginMessage.REGISTER_SUCCESS;
@@ -217,12 +220,12 @@ public class LoginUser extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 			msg.state = LoginMessage.REGISTER_FAIL;
+			System.out.println("회원가입 실패");
 			return false;
 		}
 		/* 회원가입 끝 */
 
 	}
-
 	/**
 	 * 
 	 * @param msg
@@ -245,6 +248,7 @@ public class LoginUser extends Thread {
 						// 사용자 정보를 msg에 저장한다.
 						// 로그인을 성공하면 사용자명을 저장한다.
 						msg.userName = sList[2];
+						this.userName=msg.userName;
 						msg.state = LoginMessage.LOGIN_SUCCESS;
 						return true;
 					} else {

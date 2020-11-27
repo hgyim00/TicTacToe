@@ -1,8 +1,8 @@
 package team4.tictactoe.common;
 
 /**
- *  
- * @author 안건하
+ * 
+ * @author 
  * @since 2020.11
  *
  */
@@ -11,22 +11,22 @@ public class ChatMessage implements Message {
 	private static final String ATTR_USER_ID = "userId=";
 	private static final String ATTR_USER_NAME = "userName=";
 	private static final String ATTR_CHAT_TEXT = "chatText=";
-	
+
 	public String userId;
 	public String userName;
 	public String chatText;
-
 	@Override
 	public void reset() {
-		userId = null;
-		userName = null;
-		chatText = null;
+		userId=null;
+		userName=null;
+		chatText=null;
+		
 	}
 
 	@Override
 	public String getMessageString() {
 		StringBuffer msgBuf = new StringBuffer();
-		
+
 		msgBuf.append(MSG_NAME);
 		if (userId!=null && !userId.isEmpty()) {
 			msgBuf.append(ATTR_USER_ID + userId + ",");
@@ -48,7 +48,7 @@ public class ChatMessage implements Message {
 		}
 
 		reset();
-		
+
 		String msgItems[] = msg.substring(MSG_NAME.length()).split(",");
 		String msgItem;
 		int idx;

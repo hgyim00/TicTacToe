@@ -53,7 +53,6 @@ public class LoginMessage implements Message {
 		userName = null;
 		state = 0;
 	}
-
 	@Override
 	public String getMessageString() {
 		StringBuffer msgBuf = new StringBuffer();

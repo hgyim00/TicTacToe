@@ -1,7 +1,9 @@
 package team4.tictactoe.server;
 
-import java.util.Collections;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 
 import team4.tictactoe.chat.ChatAgent;
@@ -21,6 +23,10 @@ public class GameRoom extends Thread {
 	 */
 	public boolean goOn = true;
 
+
+	public int ticCount =0 ;
+	
+	public int chatCount =0 ;
 	/**
 	 * Player1
 	 */
@@ -39,13 +45,16 @@ public class GameRoom extends Thread {
 	/**
 	 * 틱택토 게임 메시지 큐
 	 */
-	private List<TicTacToeMessage> ticTacToeMessageQ = (List<TicTacToeMessage>) Collections.synchronizedList(new LinkedList<TicTacToeMessage>());
+	private LinkedList<TicTacToeMessage> ticTacToeMessageQ = new LinkedList<TicTacToeMessage>();
 
 	/**
 	 * 택택토 게임 기능을 담당하는 객체
 	 */
-	private TicTacToeGame ticTacToeGame;
+	private static  TicTacToeGame ticTacToeGame=null;
 
+	public TicTacToeMessage tempTic= null;
+	
+	public ChatMessage tempChat = null;
 	/**
 	 * 채팅 기능을 담당하는 객체
 	 */
@@ -54,16 +63,17 @@ public class GameRoom extends Thread {
 	/**
 	 * 입장 가능한 게임방
 	 */
-	private static GameRoom newGameRoom = null;
+	public static GameRoom newGameRoom = null;
 
 	/**
 	 * 생성자
 	 */
 	public GameRoom() {
 		// 틱택토 게임 진행 객체를 생성한다.
+		// 채팅 대행 객체를 생성한다.
 		ticTacToeGame = new TicTacToeGame(this);
 
-		// 채팅 대행 객체를 생성한다.
+		
 		chatAgent = new ChatAgent(this);
 	}
 
@@ -76,10 +86,11 @@ public class GameRoom extends Thread {
 		if (newGameRoom == null) {
 			// 개설된 방이 없으면 새로 개설한다.
 			newGameRoom = new GameRoom();
-
+			
 			// 새로 개설된 방이면 입장하는 사용자를 Playe1으로 지정한다.
 			newGameRoom.player1 = loginUser;
-
+			newGameRoom.player1.playerMarker="X";
+			
 			// 사용자에게 방을 배정한다.
 			loginUser.gameRoom = newGameRoom;
 
@@ -88,7 +99,22 @@ public class GameRoom extends Thread {
 		} else {
 			// 개설된 방이 있으면 입장하는 사용자를 Player2로 지정한다.
 			newGameRoom.player2 = loginUser;
+			newGameRoom.player2.playerMarker="O";
 
+			TicTacToeMessage play1 = new TicTacToeMessage();
+			play1.playerMark="X";
+			play1.player=newGameRoom.player1.userName;
+			play1.opponent = newGameRoom.player2.userName;
+			newGameRoom.player1.sendMessage(play1);
+			
+			TicTacToeMessage play2 = new TicTacToeMessage();
+			play2.playerMark="O";
+			play2.player=newGameRoom.player1.userName;
+			play2.opponent = newGameRoom.player2.userName;
+			newGameRoom.player2.sendMessage(play2);
+			
+			
+			
 			// 사용자에게 방을 배정한다.
 			loginUser.gameRoom = newGameRoom;
 
@@ -102,9 +128,8 @@ public class GameRoom extends Thread {
 	 * 
 	 * @param msg
 	 */
-	public void enqueueChatMessage(ChatMessage msg) {
+	public  void enqueueChatMessage(ChatMessage msg) {
 		chatMessageQ.add(msg);
-		System.out.println("enqueue chat: " + chatMessageQ.get(chatMessageQ.size()-1).chatText);
 	}
 
 	/**
@@ -116,9 +141,11 @@ public class GameRoom extends Thread {
 		if (chatMessageQ.isEmpty()) {
 			return null;
 		} else {
+			
 			ChatMessage rm = chatMessageQ.remove(0);
-			System.out.println("dequeue chat: " + rm.chatText);
 			return rm;
+		
+			
 		}
 	}
 
@@ -127,22 +154,26 @@ public class GameRoom extends Thread {
 	 * 
 	 * @param msg
 	 */
-	public void enqueueTicTacToeMessage(TicTacToeMessage msg) {
-		ticTacToeMessageQ.add(msg);
+	public synchronized void enqueueTicTacToeMessage(TicTacToeMessage msg) {
+		//ticTacToeMessageQ.add(msg);
+		tempTic =msg;
+		ticCount++;
 	}
-
 	/**
 	 * 틱텍토 게임 메시지 큐에서 메시지를 한 개 빼온다.
 	 * 
 	 * @return
 	 */
-	public TicTacToeMessage dequeueTicTacToeMessage() {
-		if (ticTacToeMessageQ.isEmpty()) {
-			return null;
-		} else {
-			return ticTacToeMessageQ.remove(0);
-		}
-	}
+	//public synchronized TicTacToeMessage dequeueTicTacToeMessage() {
+	//
+	//	TicTacToeMessage temp= new TicTacToeMessage();
+	//	
+	//	temp=ticTacToeMessageQ.get(count);
+	//	
+	//	count++;
+		
+	//	return temp;
+	//}
 	
 	/**
 	 * 사용자 접속이 끊긴 경우 실행된다. 다른 사용자에게 접속이 끊긴 것을 알리고 게임을 종료한다.
@@ -165,17 +196,25 @@ public class GameRoom extends Thread {
 	 * 
 	 */
 	public void run() {
+		
+		
 		while (goOn) {
 			// 채팅 메시지를 먼저 처리한다.
-			while (!chatMessageQ.isEmpty()) {
-				System.out.println("chat message 처리");
-				chatAgent.processMessage(dequeueChatMessage());
-			}
-		
+			
+				
+				while (!chatMessageQ.isEmpty()) {
+					chatAgent.processMessage(dequeueChatMessage());
+				}
+
 			// 틱텍토 게임 메시지를 처리한다.
-			while (!ticTacToeMessageQ.isEmpty()) {
-				ticTacToeGame.processMessage(dequeueTicTacToeMessage());
-			}
+				while (ticCount>0) {
+			
+					ticTacToeGame.processMessage(tempTic);
+					tempTic=null;
+					ticCount--;
+				}
+				
+			
 		}
 	}
 }
